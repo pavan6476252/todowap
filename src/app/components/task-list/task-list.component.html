@@ -1,0 +1,16 @@
+<div class="space-y-2 flex-1 overflow-y-auto max-h-[calc(100vh)]">
+    <ng-container *ngIf="tasks$ | async as tasks; else loading">
+      <ng-container *ngIf="tasks.length; else noTasks">
+        <app-task-item
+          *ngFor="let task of tasks"
+          [task]="task"
+          (toggleStatus)="toogleTaskStatus($event)"
+        ></app-task-item>
+      </ng-container>
+    </ng-container>
+    <ng-template #noTasks>
+      <p>No tasks to render</p>
+    </ng-template>
+  </div>
+  <ng-template #loading>loading tasks...</ng-template>
+  

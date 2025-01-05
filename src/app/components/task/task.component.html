@@ -1,0 +1,116 @@
+<div class="flex flex-col max-h-full w-full overflow-hidden gap-2 ">  
+    <h2 class="text-2xl font-semibold text-gray-800  ">Task</h2>
+  
+    <!-- Scrollable Content Container -->
+    <div class="flex-1 overflow-y-auto  w-full px-2 py-2 ">
+      <form [formGroup]="taskForm!" class="flex w-full flex-col space-y-4" (ngSubmit)="onTaskFormSubmit()">
+        <!-- Task Label -->
+        <input
+          type="text"
+          formControlName="title"
+          class="border rounded-md px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          placeholder="Task label"
+        />
+  
+        <!-- Task Description -->
+        <textarea
+          rows="5"
+          formControlName="desc"
+          class="border rounded-md px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          placeholder="Description"
+        ></textarea>
+  
+        <!-- List Selector -->
+        <ng-container *ngIf="lists$ | async as lists; else loading">
+          <div class="flex gap-4 items-center">
+            <h5 class="text-sm text-slate-500">List</h5>
+            <select class="p-2 border rounded-md bg-gray-50 text-gray-700 text-xs w-min"  formControlName="list" [value]="taskForm?.value.list">
+              <option value="Select Tag"    disabled [selected]="taskForm?.value.list!==''">Select List</option> 
+              <option *ngFor="let item of lists" [value]="item._id" [selected]="taskForm?.value.list===item._id">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+        </ng-container>
+  
+        <!-- Due Date -->
+        <div class="flex gap-4 items-center">
+          <h5 class="text-sm text-slate-500">Due Date</h5>
+          <input
+            type="date"
+            class="p-2 border rounded-md bg-gray-50 text-gray-700 text-xs w-min"
+            formControlName="expiry_date"
+          />
+        </div>
+  
+        <!-- Tags Selector -->
+        <ng-container *ngIf="tags$ | async as asycTags; else loading">
+          <div class="flex min-w-full gap-4 items-center">
+            <h5 class="text-sm text-slate-500">Tags</h5>
+            <div *ngFor="let tag of tags" class="px-2 py-1 flex flex-wrap justify-center items-center rounded-md" [ngStyle]="{ 'background-color': tag.color }">
+              <span class="text-sm text-gray-100">{{ tag.label }}</span>
+            </div>
+  
+            <select name="tag" class="p-2 border rounded-md bg-gray-50 text-gray-700 text-xs" (change)="addTag($event)">
+              <option value="Add Tag" selected disabled>Add Tag</option>
+              <option *ngFor="let asycTag of asycTags" [value]="asycTag._id">
+                {{ asycTag.label }}
+              </option>
+            </select>
+          </div>
+        </ng-container>
+  
+        <ng-template #loading>
+          <div class="text-gray-500">Loading list items...</div>
+        </ng-template>
+      </form>
+  
+      
+      <!-- Subtasks Section -->
+    <div class="space-y-1 mt-4">
+        <h3 class="text-xl font-semibold text-gray-800">Subtasks</h3>
+    
+        <form [formGroup]="subTaskForm!" (ngSubmit)="addSubTask()" class="flex items-center space-x-4">
+          <input
+            type="text"
+            formControlName="title"
+            placeholder="Add Subtask"
+            class="w-full border rounded-md px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          />
+          <button type="submit" class="p-2 bg-yellow-500 rounded-md flex items-center justify-center text-white">
+            <ng-icon name="heroPlus" class="text-white text-lg"></ng-icon>
+          </button>
+        </form>
+    
+        <!-- List of Subtasks -->
+        <div *ngFor="let task of subTasks" class="ml-5 flex items-center justify-between space-x-4">
+          <div class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="task.completed"
+              (click)="toggleSubTaskStatus(task._id!)"
+              class="h-4 w-4 text-yellow-500"
+            />
+            <p [ngClass]="{ 'line-through text-gray-500': task.completed }" class="text-sm">
+              {{ task.title }}
+            </p>
+          </div>
+          <button (click)="removeSubTask(task._id!)" class="p-2 text-red-500 hover:text-red-700">
+            <ng-icon name="heroXMark" class="text-lg"></ng-icon>
+          </button>
+        </div>
+  
+        
+      </div>
+    </div>
+   
+    <div class="flex justify-between gap-4  ">
+      <button [disabled]=" taskForm?.value.id==='' " class="border rounded-md disabled:cursor-not-allowed px-4 py-2 disabled:bg-gray-200 disabled:text-white/80 flex-1 text-gray-700 hover:text-white hover:bg-gray-400">
+        Delete Task
+      </button>
+      <button [disabled]="!isFormDirty()" class="border rounded-md px-4 py-2 disabled:cursor-not-allowed disabled:bg-gray-200 enabled:bg-yellow-400 flex-1 text-white hover:bg-yellow-500  " (click)="onTaskFormSubmit()">
+        Save Changes
+      </button>
+    </div>
+  </div>
+  

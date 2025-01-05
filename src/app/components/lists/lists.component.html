@@ -1,0 +1,72 @@
+<div>
+    <h3 class="font-bold text-xs text-slate-800">LISTS</h3>
+    <ul class="mt-1">
+      <!-- Loading state -->
+      <ng-container *ngIf="loading; else content">
+        <div class="flex justify-center items-center gap-2">
+          <span>Loading...</span>
+        </div>
+      </ng-container>
+  
+      <!-- Content state: Lists -->
+      <ng-template #content>
+        <li *ngIf="lists$ | async as lists" class="space-y-2">
+          <ng-container *ngIf="lists.length > 0; else noData">
+            <div *ngFor="let list of lists" class="flex justify-between items-center gap-4">
+             
+              <div class="flex items-center gap-2">
+                <span [style]="{'background-color': list.color}" class="w-3 h-3 rounded-sm"></span>
+                <span class="text-xs text-black">{{ list.label }}</span>
+              </div>
+              <div class="px-2 rounded-sm flex items-center justify-center bg-gray-300">
+                <span class="text-xs text-slate-700">5</span>
+              </div>
+             
+              <div>
+                <button (click)="editListItem(list)" class="text-xs text-blue-500">Edit</button>
+                <button (click)="deleteListItem(list._id)" class="text-xs text-red-500 ml-2">Delete</button>
+              </div>
+            </div>
+          </ng-container>
+        </li>
+      </ng-template>
+  
+      <ng-template #noData>
+        <div class="flex justify-center items-center gap-2 w-full border-dashed rounded-sm  border border-slate-500">
+          <span class="text-xs">No Data...</span>
+        </div>
+      </ng-template>
+  
+      <!-- Add New List Button -->
+      <ng-container *ngIf="!isAddlistOptionEnable; else addNewListItem">
+        <button class="flex px-2 py-1 w-full gap-4 mt-2 items-center bg-white" (click)="toggleAddNewList()">
+          <div class="flex items-center gap-2">
+            <ng-icon name="heroPlus" class="text-gray-600 text-sm font-bold" />
+            <span class="text-xs">Add New List</span>
+          </div>
+        </button>
+      </ng-container>
+  
+      <!-- Add/Edit New List Form -->
+      <ng-template #addNewListItem>
+        <form [formGroup]="newListForm!"  class="py-1" (ngSubmit)="addList()">
+     <div class=" flex items-center justify-between">
+         <h4  class="text-sm font-bold">New List </h4>
+        <button (click)="toggleAddNewList()"  type="button">
+            <ng-icon name="heroXMark" ></ng-icon>
+        </button>
+     </div> 
+          <input formControlName="label" type="text" class="text-xs w-full px-2 py-1 border rounded-md" placeholder="Label" />
+          <div class="flex items-center gap-2 mt-2">
+            <span class="w-full text-sm h-5">Color</span>
+            <input formControlName="color" type="color" />
+          </div>
+          <button type="submit" [disabled]="loading || !isFormDirty()" class="mt-4 w-full text-xs bg-blue-500 text-white rounded  py-1">
+           {{newListForm.value.id  ? "Update List" : "Add List"}} 
+          </button>
+          <div *ngIf="errorMessage" class="text-xs text-red-500 mt-2">{{ errorMessage }}</div>
+        </form>
+      </ng-template>
+    </ul>
+  </div>
+  

@@ -1,0 +1,54 @@
+<div class="flex-1 h-full gap-4 flex flex-col ">
+    <!-- First Section: Today Task -->
+    <div class="w-full flex  h-[50%]  flex-col flex-1">
+      <!-- Today Section -->
+      <div class="flex-1 w-full border rounded-md p-4 ">
+        <app-task-header
+          [title]="'Today'"
+          [taskCount]="(todayTasks$ | async)?.length || 0"
+        ></app-task-header>
+  
+        <app-add-task-button></app-add-task-button>
+  
+        <app-task-list
+          [tasks$]="todayTasks$"
+          (toggleStatus)="toogleTaskStatus($event)"
+        ></app-task-list>
+      </div>
+    </div>
+  
+    <!-- Second Section: Tomorrow and This Week -->
+    <div class="w-full h-[50%] flex flex-1 gap-4">
+      <!-- Tomorrow Section -->
+      <div class="flex-1   border rounded-md p-4 ">
+        <app-task-header
+          [title]="'Tomorrow'"
+          [taskCount]="(tomorrowTasks$ | async)?.length || 0"
+        ></app-task-header>
+  
+        <app-task-list
+          [tasks$]="tomorrowTasks$"
+          (toggleStatus)="toogleTaskStatus($event)"
+        ></app-task-list>
+      </div>
+  
+      <!-- This Week Section -->
+      <div class="flex-1   border rounded-md p-4">
+        <app-task-header
+          [title]="'This Week'"
+          [taskCount]="(thisWeekTasks$ | async)?.length || 0"
+        ></app-task-header>
+  
+        <app-task-list
+          [tasks$]="thisWeekTasks$"
+          (toggleStatus)="toogleTaskStatus($event)"
+        ></app-task-list>
+      </div>
+    </div>
+  
+    <!-- Router Outlet for Sub Route -->
+    <div *ngIf="isSubRouteActive" class="w-[40%] h-full">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  

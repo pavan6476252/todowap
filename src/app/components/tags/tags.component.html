@@ -1,0 +1,70 @@
+<div>
+    <h3 class="font-bold text-xs text-slate-800">TAGS</h3>
+    <ul class="mt-1">
+      <!-- Loading state -->
+      <ng-container *ngIf="loading; else content">
+        <div class="flex justify-center items-center gap-2">
+          <span>Loading...</span>
+        </div>
+      </ng-container>
+  
+      <!-- Content state: Tags -->
+      <ng-template #content>
+        <li *ngIf="tags$ | async as tags" class="space-y-2">
+          <ng-container *ngIf="tags.length > 0; else noData">
+            <div *ngFor="let tag of tags" class="flex justify-between items-center gap-4">
+              <div  [style]="{'background-color': tag.color}" class=" rounded-sm px-2 ">
+                <span class="text-xs">
+                  {{tag.label}}
+                </span> 
+              </div>
+              
+              <div>
+                <button (click)="editTagItem(tag)" class="text-xs text-blue-500">Edit</button>
+                <button (click)="deleteTagItem(tag._id)" class="text-xs text-red-500 ml-2">Delete</button>
+              </div>
+            </div>
+          </ng-container>
+        </li>
+      </ng-template>
+  
+      <!-- No data state -->
+      <ng-template #noData>
+        <div class="flex justify-center items-center gap-2 w-full border-dashed rounded-sm  border border-slate-500">
+          <span class="text-xs">No Data...</span>
+        </div>
+      </ng-template>
+  
+      <!-- Add New Tag Button -->
+      <ng-container *ngIf="!isAddTagsOptionEnable; else addNewTagItem">
+        <button class="flex px-2 py-1 w-full gap-4 mt-2 items-center bg-white" (click)="toggleAddTagList()">
+          <div class="flex items-center gap-2">
+            <ng-icon name="heroPlus" class="text-gray-600 text-sm font-bold" />
+            <span class="text-xs">Add Tag</span>
+          </div>
+        </button>
+      </ng-container>
+  
+      <!-- Add/Edit New Tag Form -->
+      <ng-template #addNewTagItem>
+        <form [formGroup]="newTagForm!"  class="py-1" (ngSubmit)="addTag()">
+     <div class=" flex items-center justify-between">
+         <h4  class="text-sm font-bold">New Tag </h4>
+        <button (click)="toggleAddTagList()"w>
+            <ng-icon name="heroXMark" ></ng-icon>
+        </button>
+     </div> 
+          <input formControlName="label" type="text" class="text-xs w-full px-2 py-1 border rounded-md" placeholder="Label" />
+          <div class="flex items-center gap-2 mt-2">
+            <span class="w-full text-sm h-5">Color</span>
+            <input formControlName="color" type="color" />
+          </div>
+          <button type="submit" [disabled]="loading || !isFormDirty()" class="mt-4 w-full text-xs bg-blue-500 text-white rounded  py-1">
+           {{newTagForm.value.id  ? "Update Tag" : "Add Tag"}} 
+          </button>
+          <div *ngIf="errorMessage" class="text-xs text-red-500 mt-2">{{ errorMessage }}</div>
+        </form>
+      </ng-template>
+    </ul>
+  </div>
+  

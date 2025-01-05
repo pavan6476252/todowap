@@ -1,0 +1,39 @@
+<div
+  class="border-b px-2 py-2 flex justify-between items-center"
+  [ngClass]="{ 'bg-gray-100': task.completed }"
+>
+  <div class="flex gap-2 items-start">
+    <input
+      type="checkbox"
+      class="accent-slate-200"
+      [checked]="task.completed"
+      (click)="toogleTaskStatus()"
+    />
+    <div class="flex flex-col">
+      <p class="text-sm">{{ task.title }}</p>
+
+      <ng-container *ngIf="task.expiry_date || task.list || task.sub_tasks.length">
+        <div class="ml-5 flex flex-wrap gap-6 mt-2">
+          <div *ngIf="task.expiry_date" class="gap-2 flex items-center">
+            <ng-icon class="text-black font-bold text-lg" name="heroCalendar"></ng-icon>
+            <span class="text-xs">{{ task.expiry_date.toString().split('T')[0] }}</span>
+          </div>
+
+          <div *ngIf="task.sub_tasks.length" class="gap-2 flex items-center">
+            <span class="text-xs w-5 h-5 bg-slate-100 rounded-sm flex items-center justify-center">
+              {{ task.sub_tasks.length }}
+            </span>
+            <span class="text-xs">subtasks</span>
+          </div>
+
+          <div *ngIf="task.list" class="gap-2 flex items-center">
+            <span [ngClass]="{ 'text-xs w-4 h-4 rounded-sm': true }" [ngStyle]="{ 'background-color': task.list.color }"></span>
+            <span class="text-xs">{{ task.list.label }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-icon [routerLink]="['task', task._id]" class="text-black font-bold text-lg" name="heroArrowRight"></ng-icon>
+</div>

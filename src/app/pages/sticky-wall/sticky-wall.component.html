@@ -1,0 +1,75 @@
+<div class="flex max-h-full h-full  gap-4 ">
+    <!-- Main Content Container -->
+    <div class="flex flex-col flex-1 max-h-full gap-2  overflow-hidden">
+      <!-- Header -->
+       
+         <h1 class="text-4xl font-bold   text-gray-800">Sticky Wall</h1>
+         
+      <!-- Scrollable Content Area -->
+      <div class="flex-1 overflow-y-auto bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div *ngIf="stickyWalls$ | async as stickyWalls; else loading">
+          <div *ngIf="stickyWalls.length; else noData">
+            <!-- Grid Container -->
+            <div
+              class="grid gap-4"
+              [ngClass]="{
+                'grid-cols-2 md:grid-cols-2 lg:grid-cols-3': isSubRouteActive,
+                'grid-cols-2 md:grid-cols-3 lg:grid-cols-4': !isSubRouteActive
+              }"
+            >
+              <!-- Add Note Button -->
+              <a
+                *ngIf="!isSubRouteActive"
+                [routerLink]="['note']"
+                routerLinkActive="active"
+                class="aspect-square flex items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+              >
+                <ng-icon name="heroPlus" class="text-gray-400 text-4xl hover:text-gray-600" />
+              </a>
+  
+              <!-- Sticky Notes -->
+              <div
+                *ngFor="let wall of stickyWalls;index as i"
+                [ngStyle]="{ 'background-color': wall.color}"
+                [routerLink]="['note/'+wall._id]"
+                class="aspect-square p-4 cursor-pointer rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col"
+              >
+                <h2 class="text-xl font-semibold mb-2 truncate">{{ wall.title }}</h2>
+                 
+                <p class="text-sm line-clamp-3 flex-1">{{ wall.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Loading State -->
+        <ng-template #loading>
+          <div class="flex items-center justify-center h-full">
+            <p class="text-gray-500">Loading Sticky Walls...</p>
+          </div>
+        </ng-template>
+  
+        <!-- Empty State -->
+        <ng-template #noData>
+          <div class="flex flex-col items-center justify-center h-full p-8">
+            <p class="text-gray-500 mb-4">No Sticky Notes Found</p>
+            <a
+              *ngIf="!isSubRouteActive"
+              routerLink="note"
+              class="px-4 py-2  rounded-md border  hover:bg-slate-200 transition-colors"
+            >
+              Create Your First Note
+            </a>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  
+    <!-- Side Panel -->
+    <div
+      *ngIf="isSubRouteActive"
+      class="w-96 overflow-y-auto"
+    >
+      <router-outlet></router-outlet>
+    </div>
+  </div>

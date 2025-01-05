@@ -1,0 +1,6 @@
+
+<ng-container *ngIf="state | async as state" >
+    <ng-container *ngIf="state.loading">
+        <div class='absolute top-0 z-50  progress w-full h-1 bg-blue-500 left-right'></div>
+    </ng-container>
+</ng-container>

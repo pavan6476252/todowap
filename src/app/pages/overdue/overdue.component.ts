@@ -13,7 +13,6 @@ import { TaskService } from '../../core/services/task.service';
 @Component({
   selector: 'app-overdue',
   imports: [
-    NgIcon,
     CommonModule,
     NgIf, 
     RouterModule,

@@ -13,12 +13,8 @@ import { TaskListComponent } from "../../components/task-list/task-list.componen
 @Component({
   selector: 'app-today',
   imports: [
-    NgIcon,
     CommonModule,
-    NgIf,
-    NgFor,
-    NgClass,
-    NgStyle,
+    NgIf, 
     RouterModule,
     TaskHeaderComponent,
     AddTaskButtonComponent,

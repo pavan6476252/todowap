@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Environment } from "../../environments/environments";
 import { Injectable } from "@angular/core";
 import { IAPIResposne } from "../../@types/api-response";
+import { environment } from "../../../environments/environment";
 
 @Injectable({providedIn:'root'})
 export class ApiService {
-    private baseUrl = Environment.apiBaseUrl;
+    private baseUrl =environment.apiUrl;
 
     constructor(private httpClient: HttpClient) {
 
